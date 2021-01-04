@@ -10,7 +10,7 @@ namespace MVC_VET.Web.Data.Entities
     {
         public int Id { get; set; }
 
-
+        [Required]
         public string Nome { get; set; }
 
         [Display(Name = "Foto")]
@@ -21,6 +21,7 @@ namespace MVC_VET.Web.Data.Entities
         public DateTime? DataNascimento { get; set; }
 
         [Display(Name = "Espécie")]
+        [Required]
         public string Especie { get; set; }
 
         [Display(Name = "Raça")]

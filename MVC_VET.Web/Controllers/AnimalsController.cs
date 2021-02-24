@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using MVC_VET.Web.Data;
 using MVC_VET.Web.Data.Entities;
+using MVC_VET.Web.Data.Repositories;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -9,29 +10,30 @@ namespace MVC_VET.Web.Controllers
 {
     public class AnimalsController : Controller
     {
-        private readonly DataContext _context;
+        private readonly IRepository _repository;
 
-        public AnimalsController(DataContext context)
+        public AnimalsController(IRepository repository)
         {
-            _context = context;
+            
+            _repository = repository;
         }
 
         // GET: Animals
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View(await _context.Animals.ToListAsync());
+            return View( _repository.GetAnimals());
         }
 
         // GET: Animals/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var animal = await _context.Animals
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var animal = _repository.GetAnimal(id.Value); 
+                
             if (animal == null)
             {
                 return NotFound();
@@ -55,22 +57,22 @@ namespace MVC_VET.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(animal);
-                await _context.SaveChangesAsync();
+                _repository.AddAnimal(animal);
+                await _repository.SaveAllAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(animal);
         }
 
         // GET: Animals/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var animal = await _context.Animals.FindAsync(id);
+            var animal = _repository.GetAnimal(id.Value);
             if (animal == null)
             {
                 return NotFound();
@@ -83,7 +85,7 @@ namespace MVC_VET.Web.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nome,ImageUrl,DataNascimento,Especie,Raca")] Animal animal)
+        public async Task <IActionResult> Edit(int id, [Bind("Id,Nome,ImageUrl,DataNascimento,Especie,Raca")] Animal animal)
         {
             if (id != animal.Id)
             {
@@ -94,12 +96,12 @@ namespace MVC_VET.Web.Controllers
             {
                 try
                 {
-                    _context.Update(animal);
-                    await _context.SaveChangesAsync();
+                    _repository.UpdateAnimal(animal);
+                    await _repository.SaveAllAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!AnimalExists(animal.Id))
+                    if (!_repository.AnimalExists(animal.Id))
                     {
                         return NotFound();
                     }
@@ -114,15 +116,15 @@ namespace MVC_VET.Web.Controllers
         }
 
         // GET: Animals/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public IActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var animal = await _context.Animals
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var animal = _repository.GetAnimal(id.Value);
+
             if (animal == null)
             {
                 return NotFound();
@@ -136,15 +138,11 @@ namespace MVC_VET.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var animal = await _context.Animals.FindAsync(id);
-            _context.Animals.Remove(animal);
-            await _context.SaveChangesAsync();
+            var animal = _repository.GetAnimal(id);
+            _repository.RemoveAnimal(animal);
+            await _repository.SaveAllAsync();
             return RedirectToAction(nameof(Index));
         }
-
-        private bool AnimalExists(int id)
-        {
-            return _context.Animals.Any(e => e.Id == id);
-        }
+               
     }
 }

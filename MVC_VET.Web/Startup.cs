@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MVC_VET.Web.Data;
+using MVC_VET.Web.Data.Entities;
 using MVC_VET.Web.Data.Repositories;
 
 namespace MVC_VET.Web
@@ -22,6 +24,22 @@ namespace MVC_VET.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //Configurar a autenticação
+            services.AddIdentity<User, IdentityRole>(cfg =>
+            {
+                cfg.User.RequireUniqueEmail = true;
+                cfg.Password.RequireDigit = true;
+                cfg.Password.RequiredUniqueChars = 0;
+                cfg.Password.RequireUppercase = true;
+                cfg.Password.RequiredLength = 6;
+                cfg.Password.RequireNonAlphanumeric = false;
+            })
+            .AddEntityFrameworkStores<DataContext>();
+
+
+
+
+
             // Vamos usar um serviço de SQLServer
             services.AddDbContext<DataContext>(cfg =>
             {
@@ -56,6 +74,7 @@ namespace MVC_VET.Web
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseAuthentication();
             app.UseCookiePolicy();
 
             app.UseMvc(routes =>

@@ -28,5 +28,7 @@ namespace MVC_VET.Web.Data.Entities
         public string Raca { get; set; }
 
 
+        public User User { get; set; }
+
     }
 }

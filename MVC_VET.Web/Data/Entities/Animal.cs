@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MVC_VET.Web.Data.Entities
 {
-    public class Animal
+    public class Animal: IEntity
     {
         public int Id { get; set; }
 

@@ -10,29 +10,29 @@ namespace MVC_VET.Web.Controllers
 {
     public class AnimalsController : Controller
     {
-        private readonly IRepository _repository;
+        private readonly IAnimalRepository _animalRepository;
 
-        public AnimalsController(IRepository repository)
+        public AnimalsController(IAnimalRepository  animalRepository)
         {
-            
-            _repository = repository;
+
+            _animalRepository = animalRepository;
         }
 
         // GET: Animals
         public IActionResult Index()
         {
-            return View( _repository.GetAnimals());
+            return View( _animalRepository.GetAll());
         }
 
         // GET: Animals/Details/5
-        public IActionResult Details(int? id)
+        public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var animal = _repository.GetAnimal(id.Value); 
+            var animal = await _animalRepository.GetByIdAsync(id.Value);
                 
             if (animal == null)
             {
@@ -57,22 +57,22 @@ namespace MVC_VET.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                _repository.AddAnimal(animal);
-                await _repository.SaveAllAsync();
+
+                await _animalRepository.CreateAsync(animal);
                 return RedirectToAction(nameof(Index));
             }
             return View(animal);
         }
 
         // GET: Animals/Edit/5
-        public IActionResult Edit(int? id)
+        public async Task <IActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var animal = _repository.GetAnimal(id.Value);
+            var animal = await _animalRepository.GetByIdAsync(id.Value);
             if (animal == null)
             {
                 return NotFound();
@@ -96,12 +96,11 @@ namespace MVC_VET.Web.Controllers
             {
                 try
                 {
-                    _repository.UpdateAnimal(animal);
-                    await _repository.SaveAllAsync();
+                     await _animalRepository.UpdateAsync(animal);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!_repository.AnimalExists(animal.Id))
+                    if (!await _animalRepository.ExistAsync(animal.Id))
                     {
                         return NotFound();
                     }
@@ -116,14 +115,14 @@ namespace MVC_VET.Web.Controllers
         }
 
         // GET: Animals/Delete/5
-        public IActionResult Delete(int? id)
+        public async Task <IActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var animal = _repository.GetAnimal(id.Value);
+            var animal = await _animalRepository.GetByIdAsync(id.Value);
 
             if (animal == null)
             {
@@ -138,9 +137,8 @@ namespace MVC_VET.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var animal = _repository.GetAnimal(id);
-            _repository.RemoveAnimal(animal);
-            await _repository.SaveAllAsync();
+            var animal = await _animalRepository.GetByIdAsync(id);
+            await _animalRepository.DeleteAsync(animal);
             return RedirectToAction(nameof(Index));
         }
                

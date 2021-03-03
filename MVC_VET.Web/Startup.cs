@@ -46,7 +46,8 @@ namespace MVC_VET.Web
                 cfg.UseSqlServer(this.Configuration.GetConnectionString("DefaultConnection"));
             });
 
-            services.AddScoped<IRepository, Repository>();
+            services.AddScoped<IAnimalRepository, AnimalRepository>();
+            services.AddScoped<IOwnerRepository, OwnerRepository>();
 
             services.Configure<CookiePolicyOptions>(options =>
             {

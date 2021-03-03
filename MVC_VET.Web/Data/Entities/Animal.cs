@@ -28,6 +28,9 @@ namespace MVC_VET.Web.Data.Entities
         public string Raca { get; set; }
 
 
+        [Display(Name = "Responsável")]
+        public Owner Owner { get; set; }
+
         public User User { get; set; }
 
     }

@@ -44,7 +44,7 @@ namespace MVC_VET.Web.Data.Repositories
             await SaveAllAsync();
         }
 
-        public async Task<bool> ExistsAsync(int Id)
+        public async Task<bool> ExistAsync(int Id)
         {
             return await _context.Set<T>().AnyAsync(e => e.Id == Id);
         }

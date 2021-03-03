@@ -19,7 +19,7 @@ namespace MVC_VET.Web.Data.Repositories
 
         Task DeleteAsync(T entity);
 
-        Task<bool> ExistsAsync(int id);
+        Task<bool> ExistAsync(int id);
 
     }
 }

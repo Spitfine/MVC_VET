@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using MVC_VET.Web.Data;
 using MVC_VET.Web.Data.Entities;
 using MVC_VET.Web.Data.Repositories;
+using MVC_VET.Web.Helpers;
 
 namespace MVC_VET.Web
 {
@@ -36,10 +37,6 @@ namespace MVC_VET.Web
             })
             .AddEntityFrameworkStores<DataContext>();
 
-
-
-
-
             // Vamos usar um serviço de SQLServer
             services.AddDbContext<DataContext>(cfg =>
             {
@@ -48,6 +45,7 @@ namespace MVC_VET.Web
 
             services.AddScoped<IAnimalRepository, AnimalRepository>();
             services.AddScoped<IOwnerRepository, OwnerRepository>();
+            services.AddScoped<IUserHelper, UserHelper>(); 
 
             services.Configure<CookiePolicyOptions>(options =>
             {

@@ -4,14 +4,16 @@ using MVC_VET.Web.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MVC_VET.Web.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20210305191008_Owners")]
+    partial class Owners
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -158,29 +160,6 @@ namespace MVC_VET.Web.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Animals");
-                });
-
-            modelBuilder.Entity("MVC_VET.Web.Data.Entities.Doctor", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Email")
-                        .IsRequired();
-
-                    b.Property<string>("FirstName")
-                        .IsRequired();
-
-                    b.Property<string>("Last")
-                        .IsRequired();
-
-                    b.Property<string>("description")
-                        .IsRequired();
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Doctor");
                 });
 
             modelBuilder.Entity("MVC_VET.Web.Data.Entities.Owner", b =>

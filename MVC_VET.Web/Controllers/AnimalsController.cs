@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using MVC_VET.Web.Data;
 using MVC_VET.Web.Data.Entities;
 using MVC_VET.Web.Data.Repositories;
+using MVC_VET.Web.Helpers;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -11,11 +12,13 @@ namespace MVC_VET.Web.Controllers
     public class AnimalsController : Controller
     {
         private readonly IAnimalRepository _animalRepository;
+        private readonly IUserHelper _userHelper;
 
-        public AnimalsController(IAnimalRepository  animalRepository)
+        public AnimalsController(IAnimalRepository  animalRepository, IUserHelper userHelper)
         {
 
             _animalRepository = animalRepository;
+            _userHelper = userHelper;
         }
 
         // GET: Animals
@@ -57,7 +60,8 @@ namespace MVC_VET.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-
+                //TODO: Acrescentar o user de sessao
+                //animal.User = await _userHelper.GetUserByEmailAsync();
                 await _animalRepository.CreateAsync(animal);
                 return RedirectToAction(nameof(Index));
             }
@@ -96,7 +100,9 @@ namespace MVC_VET.Web.Controllers
             {
                 try
                 {
-                     await _animalRepository.UpdateAsync(animal);
+                    //TODO: Acrescentar o user de sessao
+                    //animal.User = await _userHelper.GetUserByEmailAsync();
+                    await _animalRepository.UpdateAsync(animal);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
